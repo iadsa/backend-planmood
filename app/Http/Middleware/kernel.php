@@ -26,9 +26,13 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+
+
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CorsMiddleware::class,
+
 
         ],
     ];
@@ -37,8 +41,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Middleware lainnya
         'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        \App\Http\Middleware\CorsMiddleware::class,
         // Middleware lainnya
     ];
-
-    // Middleware lainnya...
 }
