@@ -20,12 +20,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
-// Routes untuk jurnal 
-Route::get('/posts', [JurnalController::class, 'index']);
-Route::post('/posts', [JurnalController::class, 'store']);
-Route::get('/posts/{id}', [JurnalController::class, 'show']);
-Route::put('/posts/{id}', [JurnalController::class, 'update']);
-Route::delete('/posts/{id}', [JurnalController::class, 'destroy']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/posts', [JurnalController::class, 'index']);
+    Route::get('/posts/{id}', [JurnalController::class, 'show']);
+    Route::post('/posts', [JurnalController::class, 'store']);
+    Route::put('/posts/{id}', [JurnalController::class, 'update']);
+    Route::delete('/posts/{id}', [JurnalController::class, 'destroy']);
+});
 
 // Fallback route untuk menangani route yang tidak ditemukan
 Route::fallback(function () {
