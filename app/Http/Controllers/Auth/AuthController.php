@@ -16,6 +16,11 @@ class AuthController extends Controller
         'data' => null,
     ];
 
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
     public function register(Request $req)
     {
         Log::info('Register method called.');

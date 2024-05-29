@@ -16,7 +16,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 class Kernel extends HttpKernel
 {
     protected $middleware = [
-        // Middleware global lainnya
+        // Global middleware
+        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
     protected $middlewareGroups = [
@@ -31,9 +32,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
-            SubstituteBindings::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
 
@@ -41,6 +41,10 @@ class Kernel extends HttpKernel
         'auth:sanctum' => EnsureFrontendRequestsAreStateful::class,
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
-        // Lainnya...
+        // Middleware lainnya...
+    ];
+
+    protected $commands = [
+        \App\Console\Commands\CreateExceptionHandler::class,
     ];
 }

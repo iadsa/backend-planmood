@@ -7,6 +7,7 @@ use App\Models\PostJurnal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class JurnalController extends Controller
 {
@@ -17,9 +18,11 @@ class JurnalController extends Controller
 
     public function index()
     {
+        Log::info('GET /api/posts request received');
         $user = Auth::user();
         $posts = PostJurnal::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
+            ->with('user')
             ->get();
 
         return response()->json($posts);
@@ -27,6 +30,8 @@ class JurnalController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('POST /api/posts request received', $request->all());
+
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
@@ -45,6 +50,7 @@ class JurnalController extends Controller
         ]);
 
         $postJurnal->save();
+        $postJurnal->load('user');
 
         return response()->json([
             'message' => 'Jurnal berhasil dibuat!',
@@ -54,7 +60,9 @@ class JurnalController extends Controller
 
     public function show($id)
     {
+        Log::info('GET /api/posts/' . $id . ' request received');
         $post = PostJurnal::where('user_id', Auth::id())
+            ->with('user')
             ->findOrFail($id);
 
         return response()->json($post);
@@ -62,6 +70,7 @@ class JurnalController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::info('PUT /api/posts/' . $id . ' request received', $request->all());
         $post = PostJurnal::where('user_id', Auth::id())
             ->findOrFail($id);
 
@@ -100,6 +109,7 @@ class JurnalController extends Controller
 
     public function destroy($id)
     {
+        Log::info('DELETE /api/posts/' . $id . ' request received');
         $post = PostJurnal::where('user_id', Auth::id())
             ->findOrFail($id);
 
